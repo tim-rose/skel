@@ -32,8 +32,8 @@ aims to be more general in its application.
 
 ## Requirements
 
-* [https://github.com/tim-rose/midden](midden), the shell library
-* [https://github.com/tim-rose/devkit](devkit), the development toolkit
+* [devkit](https://github.com/tim-rose/devkit) --a make-based build system
+* [midden](https://github.com/tim-rose/midden) --a library of shell code
 
 ## Installation
 
