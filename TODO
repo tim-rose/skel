@@ -1,0 +1,12 @@
+# Things still to do...
+
+ * Add conf-driven substitutions (e.g. AUTHOR, COPYRIGHT)
+ * Build as a MSI package?
+ * Add programmable completion for skeletons
+ * Consider adding explicit case-handling, e.g.
+   * skeleton:u --uppercase (e.g. FOO_BAR)
+   * skeleton:c --camel case (e.g. fooBar)
+   * skeleton:C --upper camel case (e.g. FooBar)
+   * skeleton:t --title case (e.g. Foo Bar)
+   * skeleton:_ --snake case (e.g. foo_bar)
+   * skeleton:- --kebab case (e.g. foo-bar)

@@ -1,0 +1,149 @@
+.\"
+.\" SKEL.1 --Manual page for "skel", a skeleton file expander.
+.\"
+.TH SKEL 1 "January 2020" "Devbox Utilities" "The Other Manual"
+.SH NAME
+skel \- create some files based on a skeleton template
+.SH SYNOPSIS
+.SY skel
+.OP --list
+.YS
+.SY skel
+.OP --name myname
+.OP --include path:path...
+.OP --force
+.I skeleton \&.\|.\|.\&
+.YS
+.SH DESCRIPTION
+The
+.B skel
+command creates one or more files from a skeleton template file.
+The skeleeton is a self-extracting shell archive, which is transformed
+as it is expanded to replace the word "skeleton" with the specified
+.IR name .
+The replacement is case sensitive in the following way; if the
+replacement name is (e.g.) "foo_bar":
+.PP
+.RS 2
+.PD 0
+.TP 14
+.B skeleton
+is replaced with foo_bar
+.TP
+.B Skeleton
+is replaced with FooBar
+.TP
+.B SKELETON
+is replaced with FOO_BAR
+.RE
+.PD
+.PP
+Note that this transformation is applied to the shell archive as a
+whole, so it applies equally to the files' names and to their
+contents.
+.PP
+Binary files unpacked by
+.B skel
+are assumed to be
+.BR zip (1)
+archives: it applies
+.B unzip
+to the file, and if that succeeds, it applies the replacement
+transformation to the expanded files and then re-zips the files back
+into the archive.
+This strategy works well for Microsoft Office
+files, which are
+.B zip
+archives of XML documents.
+.PP
+By default,
+.B skel
+searches for skeletons in the directory
+.IR /usr/local/share/skel.
+although this may be overridden by the environment variable
+.B SKELPATH
+or the
+.B --include
+command line option, as described below.
+.SH OPTIONS
+.TP
+.BR \-l ,\  \-\-list
+List the available skeleton templates.
+.TP
+.BI \-n\  name
+.TQ
+.BI \-\-name\fR= name
+Modify the generated file names and contents based on
+.IR name .
+.TP
+.BI \-I\  path-spec
+.TQ
+.BI \-\-include\fR= path-spec
+Specify the directories to search for skeleton templates, as a colon-separated
+list.
+.TP
+.BR \-f ,\  \-\-force
+Force overwriting of existing files when expanding the skeleton template.
+.PD
+.SS "Logging Options"
+The
+.B skel
+command specifies its internal logging level in a
+.BR syslog (3)
+compatible way.  The default logging level is "notice".
+The following options set the logging to a specific level.
+.PP
+.PD 0
+.TP 18
+.BR \-q ,\  \-\-quiet
+Set the logging level to "warning".
+.TP
+.BR \-v ,\  \-\-verbose
+Set the logging level to "info".
+.TP
+.BR \-_ ,\  \-\-debug
+Set the logging level to "debug".
+.TP
+.BI \-\-log-level\fR= level
+Set the logging level to the specified syslog level.
+.PD
+.SH ENVIRONMENT
+.B skel
+is sensitive to the following environment variables:
+.PD 0
+.TP 14
+SKELPATH
+The default search path for
+.B skel
+skeleton templates, as a colon-separated list of directories.
+.TP
+LOG_LEVEL
+Specifies the default logging level.
+If not defined, the logging level "info"
+is used.
+.TP
+MIDDENPATH
+The search path for additional shell library functions.
+.PD
+.SH "EXIT STATUS"
+.B Skel
+exits with the following status:
+.PD 0
+.TP 4
+0
+Successfully processed all skeleton templates.
+.TP
+1
+Unable to process all skeleton templates (e.g. cannot open skeleton file).
+.TP
+2
+There was an error in the command line arguments (e.g. unrecognised option).
+.SH BUGS
+The template name transformation is done via a blind
+.BR sed ;
+there is a possiblility that binary files will be corrupted.
+.SH SEE ALSO
+.BR shar (1),
+.BR sed (1),
+.BR zip (1),
+.BR logger (1)

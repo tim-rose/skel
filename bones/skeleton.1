@@ -1,0 +1,141 @@
+.\"
+.\" SKELETON.1 --Manual page for "skeleton"
+.\"
+.TH SKELETON 1 "DATE" "PACKAGE vVERSION" "The Other Manual"
+.SH NAME
+skeleton \- do a thing to some other things
+.SH SYNOPSIS
+.\" ...brief examples of usage
+.SY skeleton
+.OP --mode argument
+.OP --boolean
+.IR files \&.\|.\|.\&
+.YS
+.\" alternate invocation
+.SY skeleton
+.OP --mode argument
+.OP --boolean
+.IR files \&.\|.\|.\&
+.YS
+.SH DESCRIPTION
+.\" ...detailed/complete description of behaviour
+TODO: write the manual page for the skeleton command.
+
+Write a few paragraphs explaining what this command (or group of
+commands) does.  If the usage is complex, consider describing it in an
+additional
+"usage" section.
+
+A note on typography:
+.PD 0
+.TP 14
+.B bold
+commands and their options
+.TP
+.I italic
+filenames, hostnames, etc.
+.TP
+\f(CRfixed\fR
+code and/or examples
+.TP
+\f(CBfixed bold\fR
+user input.
+.PD
+.TP 0
+You may also like to describe things succinctly as bulleted lists:
+.PD 0
+.IP \(bu 2
+apple
+.IP \(bu
+banana
+.IP \(bu
+canteloupe
+.PD
+.SH OPTIONS
+Summarise the overall options if needed, and then provide a detailed
+description of each one in tagged paragraphs below.  If you're
+supporting both short and long arguments, include both.
+.TP
+.BI \-a\  argument
+.TQ
+.BI \-\-arg\fR= argument
+.IR argument .
+The default prairie is "/var/run/prairie".
+.TP
+.BR \-b ,\  \-\-boolean
+.RS
+.PD 0
+.TP 12
+.B North
+I'll If it me them came go forth-Going School
+.TP
+.B South
+Came an in them those world didn't change inch
+.TP
+.B Zax
+here they budging!
+.RE
+.PD
+.SS "Logging Options"
+The
+.B skeleton
+command specifies its internal logging level in a
+.BR syslog (3)
+compatible way.  The default logging level is "notice".
+The following options set the logging to a specific level:
+.PD 0
+.TP 18
+.BR \-q ,\  \-\-quiet
+Set the logging level to "warning".
+.TP
+.BR \-v ,\  \-\-verbose
+Set the logging level to "info".
+.TP
+.BR \-_ ,\  \-\-debug
+Set the logging level to "debug".
+.TP
+.BI \-\-log-level\fR= level
+Set the logging level to the specified syslog level.
+.PD
+.SH USAGE
+Describe "user guide" style explanations of how skeleton may be used.
+.SH ENVIRONMENT
+Describe the environment variables and installed files of skeleton.
+.SH EXAMPLES
+Consider some typical (and unusual!) use scenarios. Describe each one,
+and provide a code example using the ".EX" macros.
+.SS "Typical Usage"
+Describe a typical use scenario.
+.EX
+\f(CB$ skeleton --verbose file.txt\fR
+info: Skeleton: something happened to "file.txt"
+.EE
+.SS "Unusual Usage"
+Describe an unusual use scenario for skeleton.
+.EX
+while skeleton --special; do
+    echo "Skeleton: did something special"
+done
+.EE
+.SH "EXIT STATUS"
+The
+.B skeleton
+command
+exits with the following status:
+.PD 0
+.TP 4
+0
+Successfully processed all skeletons.
+.TP
+1
+Unable to process all skeletons.
+.TP
+2
+There was an error in the command line arguments.
+.SH BUGS
+Describe unusual behaviour, or limitations.
+.SH AUTHORS
+Skeleton was written by AUTHOR.
+.SH SEE ALSO
+.BR kill (1),
+.BR touch (1)
