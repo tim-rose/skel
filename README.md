@@ -7,7 +7,16 @@ that includes common definitions, or performs common tasks.
 
 **Skel** is designed to make it easy to manage and use boilerplate code.
 It is structured as a library of template files, and a shell script
-to apply a template while making some systematic substitutions.
+to unpack a skeleton template while making some systematic substitutions.
+
+The names and the contents of the files in the skeleton are modified
+such that the text "skeleton" is substituted with a generated name.
+
+e.g., if the core name is foo_bar:
+
+* `skeleton` is changed to `foo_bar`
+* `Skeleton` is changed to `FooBar`
+* `SKELETON` is changed to `FOO_BAR`.
 
 **Skel** is written as a POSIX shell script, so it should run fine
 in any sufficiently POSIX environment (e.g. Linux, Darwin, Cygwin,
@@ -23,9 +32,8 @@ aims to be more general in its application.
 
 ## Requirements
 
-* [todo:devkit-link](midden), the shell library
-* [todo:devkit-link](devkit), the development toolkit
-
+* [https://github.com/tim-rose/midden](midden), the shell library
+* [https://github.com/tim-rose/devkit](devkit), the development toolkit
 
 ## Installation
 
@@ -99,3 +107,4 @@ This code is licensed under the MIT licence.
 * `bash` autocompletion
 * additional substitutions (e.g. COPYRIGHT, AUTHOR, DATE, VERSION etc.)
 * lots more skeletons!
+* handle plurals intelligently.
