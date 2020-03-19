@@ -8,39 +8,23 @@
 #include <tap.h>
 #include <skeleton.h>
 
-int vector[] = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
-
-static int intcmp(int *i1, int *i2)
-{
-    return *i1 - *i2;
-}
-
 int main(void)
 {
-    size_t i, n, key = 0, slot;
-    bool status;
+    SkeletonPtr skeleton_1 = new_skeleton("skeleton-1", 1, 1);
+    SkeletonPtr skeleton_2 = new_skeleton("skeleton-2", 2, 2);
 
-    plan_tests(17);
+    plan_tests(4);
 
-    slot = binsearch(&key, vector, 0, sizeof(vector[0]),
-                     (CompareProc) intcmp, &status);
-    ok(!status && slot == 0, "zero-size table");
-    for (n = 0; n <= 10; n += 5)
-    {
-        for (i = 0; i < n; i += 2)
-        {
-            key = i;
-            slot = binsearch(&key, vector, n, sizeof(vector[0]),
-                             (CompareProc) intcmp, &status);
-            ok(status &&
-               slot == key / 2, "find key %d in vector[%d]", key, n);
+    ok(skeleton_1 != NULL,
+       "new_skeleton() allocates object memory");
+    ok(strcmp(skeleton_1->name, "skeleton-1") == 0
+       && skeleton_1->x == 1
+       && skeleton_1->y == 1,
+       "new_skeleton() initialises object");
 
-            key = i + 1;
-            slot = binsearch(&key, vector, n, sizeof(vector[0]),
-                             (CompareProc) intcmp, &status);
-            ok(!status && slot == key / 2 + 1,
-               "find slot for key %d in vector[%d]", key, n);
-        }
-    }
+    ok(compare_skeleton(skeleton_1, skeleton_1) == 0,
+       "compare_skeleton() tests equal values");
+    ok(compare_skeleton(skeleton_1, skeleton_2) == -1,
+       "compare_skeleton() tests unequal values");
     return exit_status();
 }

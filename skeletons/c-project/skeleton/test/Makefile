@@ -11,6 +11,6 @@ BUILD_PATH = ../libskeleton
 
 include devkit.mk test/tap.mk
 
-$(C_MAIN): -lxtd
+$(C_MAIN): -lskeleton -lxtd
 
 test-tap: $(C_MAIN) $(SH_TRG)
