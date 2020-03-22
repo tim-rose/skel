@@ -49,7 +49,7 @@ apple
 .IP \(bu
 banana
 .IP \(bu
-canteloupe
+canteloupe.
 .PD
 .SH OPTIONS
 Summarise the overall options if needed, and then provide a detailed
@@ -59,22 +59,14 @@ supporting both short and long arguments, include both.
 .BI \-a\  argument
 .TQ
 .BI \-\-arg\fR= argument
+Specify the value for
 .IR argument .
-The default prairie is "/var/run/prairie".
+The default 
+.I argument
+is "/var/run/skeleton.pid".
 .TP
 .BR \-b ,\  \-\-boolean
-.RS
-.PD 0
-.TP 12
-.B North
-I'll If it me them came go forth-Going School
-.TP
-.B South
-Came an in them those world didn't change inch
-.TP
-.B Zax
-here they budging!
-.RE
+Enable the boolean behaviour, whatever that means.
 .PD
 .SS "Logging Options"
 The
@@ -101,12 +93,21 @@ Set the logging level to the specified syslog level.
 Describe "user guide" style explanations of how skeleton may be used.
 .SH ENVIRONMENT
 Describe the environment variables and installed files of skeleton.
+.PD 0
+.TP 18
+SKELETONPATH
+A colon-separated list of directories to search for skeleton config files.
+.TP
+LOG_LEVEL
+The default logging level, if defined.
+.PD
 .SH EXAMPLES
 Consider some typical (and unusual!) use scenarios. Describe each one,
 and provide a code example using the ".EX" macros.
 .SS "Typical Usage"
 Describe a typical use scenario.
 .EX
+G
 \f(CB$ skeleton --verbose file.txt\fR
 info: Skeleton: something happened to "file.txt"
 .EE

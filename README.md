@@ -105,6 +105,4 @@ This code is licensed under the MIT licence.
 ## TODO
 
 * `bash` autocompletion
-* additional substitutions (e.g. COPYRIGHT, AUTHOR, DATE, VERSION etc.)
 * lots more skeletons!
-* handle plurals intelligently.
