@@ -21,7 +21,7 @@
 . midden
 require log
 require getopt
-require conjugate
+require wordy
 
 version=
 build=
@@ -119,7 +119,7 @@ fill_skeleton()
     local plural_camel_name="$(camel_case $plural_name)"
     local plural_upper_name="$(echo $plural_name | tr a-z A-Z)"
 
-    local transform="s/skeletons/$plural_name/g;s/Skeletons/$plural_camel_name/g;s/SKELETON/$plural_upper_name/g"
+    local transform="s/skeletons/$plural_name/g;s/Skeletons/$plural_camel_name/g;s/SKELETONS/$plural_upper_name/g"
     local transform="$transform;s/skeleton/$name/g;s/Skeleton/$camel_name/g;s/SKELETON/$upper_name/g"
 
     info 'loading skeleton "%s"' "$skel_file"

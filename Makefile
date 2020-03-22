@@ -1,4 +1,3 @@
-SED_SRC = project.sed
 #
 # Makefile --Build rules for SKEL, the skeleton file processor.
 #
