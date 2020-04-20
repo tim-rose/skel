@@ -50,6 +50,7 @@ typedef struct SkeletonConfig_t
 {
     int retry_max;
     int seed;
+    int version;
     double dwell;
     double velocity;
     double temperature;
@@ -87,6 +88,10 @@ static Option opts[] = {               /* command-line options... */
      .value = "25C",
      .doc = "set the skeleton threshold temperature",
      .proc = opt_temperature,.data = (void *) &skeleton_config.temperature},
+    {
+     .opt = 'V',.name = "version",.value_name = "version",
+     .doc = "print skeleton's version and exit",
+     .proc = opt_bool,.data = (void *) &skeleton_config.version},
     /*
      * mix in logging options: -v, -q, -_, --log-level
      */
@@ -107,8 +112,11 @@ int main(int argc, char *argv[])
         opt_usage(help_prologue, opts, NULL);
         exit(2);                       /* failure: bad options */
     }
-    info("version: %s-%s", version, build);
-
+    if (skeleton_config.version)
+    {
+        printf("skeleton version %s-%s\n", version, build);
+        exit(0);
+    }
     print_config(&skeleton_config);
 
     (void) compare_skeleton(skeleton, skeleton);
