@@ -27,7 +27,7 @@ Provide links to other material in this repo, or external.
 
 ## Requirements
 
-* [devkit](https://github.com/tim-rose/devkit) --a make-based build system
+* [makeshift](https://github.com/tim-rose/makeshift) --a make-based build system
 * [xtd](https://github.com/tim-rose/xtd) --a library of C code
 * [midden](https://github.com/tim-rose/midden) --a library of shell code
 

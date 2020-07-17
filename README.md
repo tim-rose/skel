@@ -32,7 +32,7 @@ aims to be more general in its application.
 
 ## Requirements
 
-* [devkit](https://github.com/tim-rose/devkit) --a make-based build system
+* [makeshift](https://github.com/tim-rose/makeshift) --a make-based build system
 * [midden](https://github.com/tim-rose/midden) --a library of shell code
 
 ## Installation

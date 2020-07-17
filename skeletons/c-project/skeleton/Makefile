@@ -12,7 +12,7 @@ CONF_SRC = skeleton.conf
 
 MAN1_SRC = skeleton.1
 
-include devkit.mk
+include makeshift.mk
 
 $(C_MAIN): libskeleton/$(archdir)/lib.a -lxtd
 

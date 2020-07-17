@@ -9,7 +9,7 @@ SH_SRC = test-exec.sh
 
 BUILD_PATH = ../libskeleton
 
-include devkit.mk test/tap.mk
+include makeshift.mk test/tap.mk
 
 $(C_MAIN): -lskeleton -lxtd
 

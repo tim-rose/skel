@@ -6,7 +6,7 @@
 # of each of the sub-directories.
 #
 subdir = skel
-include devkit.mk
+include makeshift.mk
 
 SKELDIRS = $(subst /,,$(wildcard */))
 

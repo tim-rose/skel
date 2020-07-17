@@ -6,7 +6,7 @@ language = c
 H_SRC = skeleton.h
 C_SRC = skeleton.c
 
-include devkit.mk library.mk
+include makeshift.mk library.mk
 
 #install: install-all
 #uninstall: uninstall-all

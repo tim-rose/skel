@@ -6,7 +6,7 @@ language = sh nroff
 SH_SRC = skel.sh
 MAN1_SRC = skel.1
 
-include devkit.mk
+include makeshift.mk
 
 install: install-sh
 uninstall: uninstall-sh
