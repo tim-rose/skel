@@ -3,8 +3,9 @@
 #
 language = sh nroff
 
-SH_SRC = skel.sh
-MAN1_SRC = skel.1
+SH_SRC = skel-shar.sh skel.sh
+SED_SRC = sample.sed
+MAN1_SRC = skel-shar.1 skel.1
 
 include makeshift.mk
 
