@@ -1,5 +1,5 @@
 #!/bin/sh
-# shar: shell archiver
+# skel-shar: a shell archiver
 #
 # Contents:
 # readlink()         --Define readlink(1) as needed...
@@ -21,9 +21,9 @@
 # arg1...argn	--files to be archived
 #
 # Remarks:
-# shar provides a simple, portable machanism for archiving text files
-# intended for distribution. The archive is printed to <stdout>, and
-# may be redirected as required. All diagnostics are printed to
+# skel-shar provides a simple, portable machanism for archiving text
+# files intended for distribution. The archive is printed to <stdout>,
+# and may be redirected as required. All diagnostics are printed to
 # <stderr>.
 #
 # The archive created by shar may be unpacked by running it as a
@@ -31,8 +31,7 @@
 #
 # @todo: preserve file permissions (use sed to construct arithmetic)
 #
-version=0.2
-build=latest
+version=
 options=dhmvq_
 usage="Usage: shar -$options files... >archive"
 mkdir_ok=
@@ -52,11 +51,15 @@ log_quit()	{ notice "$@"; exit 1 ; }
 #
 # readlink() --Define readlink(1) as needed...
 #
+# Remarks:
+# readlink(1) is common but not guranteed on all systems.
+#
 if ! type readlink >/dev/null 2>&1; then
     debug 'emulating readlink(1)'
     readlink()
     {
 	local file="$1"
+
 	if [ -h "$1" ]; then
 	    ls -l "$1" | sed -e 's/.* -> //'
 	    true
@@ -104,6 +107,7 @@ argv_or_stdin()
 is_binary()
 {
     local file="$1"
+
     n=$(tr -d '\000\033\a\b\t\r\n\f\v !-~' <"$file" | wc -c)
     if [ "$n" -ne 0 ]; then
 	debug '%s: contains %d unprintable characters' "$file" "$n"
@@ -151,7 +155,8 @@ archive_prologue()
 	do
 	    case "$option" in
 	    f)	force=1;;
-	    \?)	echo "Usage: <file>.sh [-f] [files...]"  >&2
+	    \?)
+	        echo "Usage: <file>.sh [-f] [files...]"  >&2
 		exit 2;;
 	    esac
 	done
@@ -170,6 +175,7 @@ archive_prologue()
 	is_selected()
 	{
 	    local target="$1"; shift
+
 	    if [ $# -eq 0 ]; then
 	        return 0		# always selected
 	    fi
@@ -218,7 +224,7 @@ archive_symlink()
 
     notice "r %s\tsymlink" "$file"
     cat <<- EOF
-	note="symlink to $target"
+	file_type="symlink to $target"
 	(cd "$dir" && ln -sf "$target" "$base")
 	EOF
 }
@@ -252,14 +258,14 @@ archive_file()
     if [ -s "$file" ]; then
 	if is_binary "$file"; then
 	    notice 'r %s\tbinary' "$file"
-	    echo 'note="binary"'
+	    echo 'file_type="binary"'
 	    echo "cat > \"\$tmpfile.uu\" << '$eof_mark'"
 	    uuencode $uu_opts "$file" < "$file"
 	    echo "$eof_mark"
 	    echo 'uudecode -o "$tmpfile" "$tmpfile.uu" && rm "$tmpfile.uu"'
 	elif is_missing_nl "$file"  ; then
 	    notice 'r %s\tmissing-newline' "$file"
-	    echo 'note="missing newline"'
+	    echo 'file_type="missing newline"'
 	    echo "sed -e 's/^X//' > \"\$tmpfile.nl\" << '$eof_mark'"
 	    sed -e "s/^/X/" "$file"
 	    echo ""		# add compensating newline
@@ -271,25 +277,26 @@ archive_file()
 		EOF
 	else
 	    notice 'r %s\ttext' "$file"
-	    echo 'note="text"'
+	    echo 'file_type="text"'
 	    echo "sed -e 's/^X//' > \$tmpfile << '$eof_mark'"
 	    sed -e "s/^/X/" "$file"
 	    echo "$eof_mark"
 	fi
     else
 	notice 'r %s\tempty' "$file"
-	echo 'note="empty"'
+	echo 'file_type="empty"'
 	echo "touch \"\$tmpfile\""
     fi
 }
 
 
 #
-# main() --Archive a list of files into a shell self-extracting archive
+# main() --Archive a list of files into a shell self-extracting archive.
 #
 main()
 {
     local status=0
+
     archive_prologue "$@"
     argv_or_stdin "$@" |
 	{
@@ -314,9 +321,9 @@ main()
 			    if [ ! -e "$file" -o "\$force" ]; then
 			        mv "\$tmpfile" "$file"
 			    else
-			        note="file exists, not overwritten"
+			        file_type="file exists, not overwritten"
 			    fi
-			    printf 'x %s\t%s\n' '$file' "\$note"
+			    printf 'x %s\t%s\n' '$file' "\$file_type"
 			fi
 			EOF
 		fi
@@ -338,7 +345,9 @@ do
     v)	quiet= verbose=1 debug=;;
     q)	quiet=1 verbose= debug=;;
     _)	quiet= verbose=1 debug=1;;
-    \?)	echo $usage >&2
+    \?)
+	printf 'skel-shar version %s\n' "$version" >&2
+	echo $usage >&2
 	exit 2;;
     esac
 done

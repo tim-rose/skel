@@ -18,14 +18,12 @@
 # TODO: implement bash expansion support?
 # TODO: customised replacements via additional sed/conf file.
 #
-. midden
-require log
-require getopt
-require wordy
+. "midden"
+require "log"
+require "getopt"
+require "wordy"
 
 version=
-build=
-
 include=${SKELPATH:-/usr/local/share/skel}
 name=
 opts="f.force;I.include=$include;l.list;n.name=$name;s.script=;?.help"
@@ -45,7 +43,7 @@ main()
 	exit 0
     fi
     log_getopts
-    info 'skel version %s.%s' "$version" "$build"
+    info 'skel version %s' "$version"
 
     if [ "$list" ]; then
 	list_skeletons
@@ -78,10 +76,11 @@ main()
 }
 
 #
-# usage() --echo this script's help message.
+# usage() --Echo this script's help message.
 #
 usage()
 {
+    printf 'skel version %s\n' "$version"
     getopt_usage "skel [options] -n name skeleton..." "$1"
     cat <<EOF
 e.g.
@@ -95,7 +94,8 @@ EOF
 list_skeletons()
 {
     local IFS=:
-    for dir in "$include"; do
+
+    for dir in $include; do
         if [ -d "$dir" ]; then
 	    printf '%s:\n' "$dir"
             ls "$dir"

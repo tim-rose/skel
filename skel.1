@@ -1,7 +1,7 @@
 .\"
 .\" SKEL.1 --Manual page for "skel", a skeleton file expander.
 .\"
-.TH SKEL 1 "January 2020" "Devbox Utilities" "The Other Manual"
+.TH SKEL 1 "January 2020" "Development Utilities" "The Other Manual"
 .SH NAME
 skel \- create some files based on a skeleton template
 .SH SYNOPSIS
@@ -10,6 +10,7 @@ skel \- create some files based on a skeleton template
 .YS
 .SY skel
 .OP --name myname
+.OP --script filter
 .OP --include path:path...
 .OP --force
 .I skeleton \&.\|.\|.\&
@@ -76,6 +77,16 @@ List the available skeleton templates.
 Modify the generated file names and contents based on
 .IR name .
 .TP
+.BI \-n\  script
+.TQ
+.BI \-\-script\fR= sed-script
+Further modify the generated content by a
+.BR sed (1)
+script, that reads text from
+.I stdin
+and prints the filtered/modified output to
+.IR stdout .
+.TP
 .BI \-I\  path-spec
 .TQ
 .BI \-\-include\fR= path-spec
@@ -138,6 +149,11 @@ Unable to process all skeleton templates (e.g. cannot open skeleton file).
 .TP
 2
 There was an error in the command line arguments (e.g. unrecognised option).
+.SH EXAMPLES
+.EX
+.B $ skel -l
+some output...
+.EE
 .SH BUGS
 The template name transformation is done via a blind
 .BR sed ;
@@ -146,4 +162,4 @@ there is a possiblility that binary files will be corrupted.
 .BR shar (1),
 .BR sed (1),
 .BR zip (1),
-.BR logger (1)
+.BR logger (1).
