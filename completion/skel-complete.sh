@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# skel-complete.sh --Programmable completion for the skel command.
+#
+
+# _skel_complete() --Bash(1) completion function for skel(1).
+#
+# Remarks:
+# COMPREPLY array holds the completion results that gets displayed
+#     after pressing [TAB][TAB]
+# COMP_WORDS : array of words that is typed on the command line
+# COMP_CWORD : index for the COMP_WORDS array and using this different
+#     position words on command line can be accessed.
+#
+# compgen : -W holds the possible completions and the respective
+# argument get chosen based on the $current_arg
+#
+__skel_complete()
+{
+    local command="$1" arg="$2" prev_arg="$3"
+    local skel_options="-f --force -i --include -n --name -s --script"
+    skel_options="$skel_options -q --quiet -v --verbose -_ --debug"
+
+    case $prev_arg in		# complete options with arg.s
+	-i | --include)
+	    COMPREPLY=( $(compgen -d -- $arg) )
+	    return 0
+	    ;;
+	-n | --name)
+	    COMPREPLY=( $(compgen -W name -- $arg) )
+	    return 0
+	    ;;
+	-s | --script)
+	    COMPREPLY=( $(compgen -f -- $arg) )
+	    return 0
+	    ;;
+    esac
+
+    case $arg in		# complete skel's options
+	-*)
+	    COMPREPLY=( $(compgen -W "$skel_options" -- "$arg" ) )
+	    return 0
+	    ;;
+    esac
+    #
+    # complete misc. arg.s by delegating to "skel --list".
+    #
+    COMPREPLY=( $(compgen -W "$(${COMP_WORDS[*]} --list)" -- $arg) )
+}
+
+complete -F __skel_complete skel
