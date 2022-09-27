@@ -11,7 +11,7 @@ include makeshift.mk
 SKELDIRS = $(subst /,,$(wildcard */))
 
 %.sha:
-	(cd $* && find -L * -type f | xargs shar -h) >$@
+	(cd $* && find -L * -type f | xargs skel-shar -h) >$@
 
 build: $(SKELDIRS:%=%.sha)
 
