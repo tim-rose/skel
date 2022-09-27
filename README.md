@@ -47,7 +47,7 @@ $ make install
 To create a file based on a skeleton, type `skel -n <name> <skeleton>`:
 
 ```bash
-<strong>$ skel -v -n my_thing c-project.sha</strong>
+$ skel -v -n my_thing c-project.sha
 skel info: skel version local.latest
 skel info: loading skeleton "/usr/local/share/skel/c-project.sha"
 skel info: my_thing/my_thing.c text
@@ -61,6 +61,7 @@ skel info: my_thing/Makefile text
 skel info: my_thing/README.md text
 skel info: my_thing/my_thing.1 text
 skel info: my_thing/my_thing.conf text
+
 $ ls -l my_thing
 total 28
 -rw-rw-r-- 1 timmo admin 1053 Mar 13 18:07 LICENSE
