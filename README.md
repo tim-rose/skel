@@ -10,7 +10,7 @@ It is structured as a library of template files, and a shell script
 to unpack a skeleton template while making some systematic substitutions.
 
 The names and the contents of the files in the skeleton are modified
-such that the text "skeleton" is substituted with a generated name.
+such that the text "skeleton" is substituted with a specified name.
 
 e.g., if the core name is foo_bar:
 
@@ -23,7 +23,8 @@ in any sufficiently POSIX environment (e.g. Linux, Darwin, Cygwin,
 etc.).
 
 Binary files are opportunistically opened as **zip** files, and (if
-successful) the contents undergo substitution.
+successful) the contents undergo substitution.  This works well for Microsoft
+Office files.
 
 **Skel** is inspired by *Unix's* skeleton home directory facility, and
 of course the purpose-built facilities used by some common complex
@@ -46,7 +47,7 @@ $ make install
 To create a file based on a skeleton, type `skel -n <name> <skeleton>`:
 
 ```bash
-$ skel -v -n my_thing c-project.sha
+<strong>$ skel -v -n my_thing c-project.sha</strong>
 skel info: skel version local.latest
 skel info: loading skeleton "/usr/local/share/skel/c-project.sha"
 skel info: my_thing/my_thing.c text
@@ -104,5 +105,5 @@ This code is licensed under the MIT licence.
 
 ## TODO
 
-* `bash` autocompletion
+* `bash` autocompletion (done!)
 * lots more skeletons!
