@@ -1,15 +1,15 @@
 #
 # Makefile --Build rules for skeleton.
 #
+export VERSION = $(shell git describe --dirty)
+
 language = c conf nroff
 
 C_SRC = skeleton.c
 C_MAIN_SRC = skeleton.c
 LOCAL.C_CPPFLAGS = -I libskeleton/include
 
-
 CONF_SRC = skeleton.conf
-
 MAN1_SRC = skeleton.1
 
 include makeshift.mk
