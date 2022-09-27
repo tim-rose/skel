@@ -4,7 +4,7 @@
 language = sh nroff
 
 SH_SRC = skel-shar.sh skel.sh
-SED_SRC = sample.sed
+SED_SRC = keyword.sed
 MAN1_SRC = skel-shar.1 skel.1
 
 export VERSION = $(shell git describe --dirty)
