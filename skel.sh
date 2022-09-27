@@ -61,7 +61,7 @@ main()
 
     # REVISIT: read templates from stdin if no-args?
     for file; do
-	local skel_path=$(resolve_path "$include" "$file")
+	local skel_path=$(resolve_path "$include" "$file.sha")
 
 	if [ -f "$file" ]; then
 	    skel_path=$file
@@ -97,10 +97,9 @@ list_skeletons()
 
     for dir in $include; do
         if [ -d "$dir" ]; then
-	    printf '%s:\n' "$dir"
-            ls "$dir"
+            ls "$dir" | sed -e 's/[.]sha//g'
 	fi
-    done
+    done | sort -u
 }
 
 #
