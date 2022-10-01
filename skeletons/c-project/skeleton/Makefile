@@ -1,7 +1,7 @@
 #
 # Makefile --Build rules for skeleton.
 #
-export VERSION = $(shell git describe --dirty)
+export VERSION ?= $(shell git describe --dirty 2>/dev/null)
 
 language = c conf nroff
 
@@ -12,7 +12,7 @@ LOCAL.C_CPPFLAGS = -I libskeleton/include
 CONF_SRC = skeleton.conf
 MAN1_SRC = skeleton.1
 
-include makeshift.mk
+include makeshift.mk doxygen.mk
 
 $(C_MAIN): libskeleton/$(archdir)/lib.a -lxtd
 

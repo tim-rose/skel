@@ -6,8 +6,8 @@
  * Options:
  *
  * Contents:
- * main()         --Process command options into config and launch.
- * opt_retry()    --Process/validate the "retry" command-line option.
+ * main()         --Process command options into config and start skeletoning.
+ * opt_range()    --Process/validate that an option value is in range.
  * print_config() --Output the values of the specified config.
  *
  * Remarks:
@@ -22,26 +22,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <option.h>
-#include <strparse.h>
-#include <vector.h>
-#include <estring.h>
-#include <log.h>
+#include <xtd/option.h>
+#include <xtd/strparse.h>
+#include <xtd/vector.h>
+#include <xtd/estring.h>
+#include <xtd/log.h>
+
 #include <skeleton.h>
 
 #ifndef VERSION
-#define VERSION "local"
+#define VERSION "unknown"
 #endif /* VERSION */
-#ifndef BUILD
-#define BUILD "latest"
-#endif /* BUILD */
 
 #define SKELETON_MAX	10             /* TODO: comment */
 #define RETRY_MAX	10
 
 static const char name[] = "skeleton";
 static const char version[] = VERSION;
-static const char build[] = BUILD;
 
 /*
  * skeleton configuration adjustable by command-line options.
@@ -56,7 +53,7 @@ typedef struct SkeletonConfig_t
     double temperature;
 } SkeletonConfig, *SkeletonConfigPtr;
 
-static void print_config(SkeletonConfigPtr config);
+static void print_config(SkeletonConfig *config);
 static int opt_range(const char *name, const char *text, void *data);
 
 static SkeletonConfig skeleton_config = { 0 };
@@ -104,7 +101,7 @@ static Option opts[] = {               /* command-line options... */
  */
 int main(int argc, char *argv[])
 {
-    SkeletonPtr skeleton = new_skeleton("skeleton", 1, 2);
+    Skeleton *skeleton = new_skeleton("skeleton", 1, 2);
 
     log_init(name);
     if (!opt_getopts_long(argc, argv, opts) || !opt_defaults(opts))
@@ -114,13 +111,13 @@ int main(int argc, char *argv[])
     }
     if (skeleton_config.version)
     {
-        printf("skeleton version %s-%s\n", version, build);
+        printf("skeleton version %s\n", version);
         exit(0);
     }
     print_config(&skeleton_config);
 
     (void) compare_skeleton(skeleton, skeleton);
-    free_skeleton(skeleton, 1);
+    free_skeleton(skeleton);
 
     if (optind < argc)
     {
@@ -152,7 +149,7 @@ static int opt_range(const char *opt_name, const char *text, void *data)
 /*
  * print_config() --Output the values of the specified config.
  */
-static void print_config(SkeletonConfigPtr config)
+static void print_config(SkeletonConfig *config)
 {
     if (config == NULL)
     {
