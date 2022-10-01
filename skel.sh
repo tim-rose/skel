@@ -26,7 +26,7 @@ require "wordy"
 version=
 include=${SKELPATH:-/usr/local/share/skel}
 name=
-opts="f.force;I.include=$include;l.list;n.name=$name;s.script=;?.help"
+opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=;?.help"
 opts="$opts;$LOG_GETOPTS"
 
 #
@@ -72,6 +72,7 @@ main()
 	    continue
 	fi
 	fill_skeleton "$skel_path"
+	# TODO: apply and remove post-processing script
     done
 }
 
@@ -97,7 +98,7 @@ list_skeletons()
 
     for dir in $include; do
         if [ -d "$dir" ]; then
-            find "$dir" -name "*.sha" | sed -e "s|$dir/||;s/[.]sha//g"
+	    find "$dir" -name "*.sha" | sed -e "s|$dir/||;s/[.]sha//g"
 	fi
     done | sort -u
 }
@@ -118,6 +119,9 @@ fill_skeleton()
     local plural_camel_name="$(camel_case $plural_name)"
     local plural_upper_name="$(echo $plural_name | tr a-z A-Z)"
 
+    if [ "$pascal" ]; then
+	name="$(pascal_case $name)"
+    fi
     local transform="s/skeletons/$plural_name/g;s/Skeletons/$plural_camel_name/g;s/SKELETONS/$plural_upper_name/g"
     local transform="$transform;s/skeleton/$name/g;s/Skeleton/$camel_name/g;s/SKELETON/$upper_name/g"
 
