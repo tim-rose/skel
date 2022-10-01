@@ -97,7 +97,7 @@ list_skeletons()
 
     for dir in $include; do
         if [ -d "$dir" ]; then
-            ls "$dir" | sed -e 's/[.]sha//g'
+            find "$dir" -name "*.sha" | sed -e "s|$dir/||;s/[.]sha//g"
 	fi
     done | sort -u
 }
