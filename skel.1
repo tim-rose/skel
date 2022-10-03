@@ -13,6 +13,7 @@ skel \- create some files based on a skeleton template
 .OP --script filter
 .OP --include path:path...
 .OP --force
+.OP --pascal
 .I skeleton \&.\|.\|.\&
 .YS
 .SH DESCRIPTION
@@ -29,19 +30,28 @@ replacement name is (e.g.) "foo_bar":
 .PD 0
 .TP 14
 .B skeleton
-is replaced with foo_bar
+is replaced with foo_bar (or fooBar)
 .TP
 .B Skeleton
 is replaced with FooBar
 .TP
 .B SKELETON
-is replaced with FOO_BAR
+is replaced with FOO_BAR.
 .RE
 .PD
 .PP
 Note that this transformation is applied to the shell archive as a
 whole, so it applies equally to the files' names and to their
 contents.
+.PP
+The
+.I --pascal
+option controls whether
+.I name
+is translated as
+.I foo_bar
+or
+.I fooBar.
 .PP
 Binary files unpacked by
 .B skel
@@ -93,6 +103,12 @@ and prints the filtered/modified output to
 Specify the directories to search for skeleton templates, as a colon-separated
 list.
 .TP
+.BR \-p ,\  \-\-pascal
+Control expansion of
+.I name
+to
+.IR pascalCase .
+.TP
 .BR \-f ,\  \-\-force
 Force overwriting of existing files when expanding the skeleton template.
 .PD
@@ -130,7 +146,7 @@ skeleton templates, as a colon-separated list of directories.
 .TP
 LOG_LEVEL
 Specifies the default logging level.
-If not defined, the logging level "info"
+If not defined, the logging level "notice"
 is used.
 .TP
 MIDDENPATH
