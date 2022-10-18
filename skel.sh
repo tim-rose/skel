@@ -26,8 +26,9 @@ require "wordy"
 version=
 include=${SKELPATH:-/usr/local/share/skel}
 name=
-opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=;?.help"
+opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=;w.windows;?.help"
 opts="$opts;$LOG_GETOPTS"
+sh_opts=
 
 #
 # main() --Process cmd-line options etc.
@@ -131,11 +132,8 @@ fill_skeleton()
 
     sed -e "$transform" ${script:+-f $script} <"$skel_file" >"$tmp_file"
 
-    if [ "$force" ]; then
-	sh "$tmp_file" -f
-    else
-	sh "$tmp_file"
-    fi > "$idx_file"
+    sh_opts="${force:+-f} ${windows:+-w}"
+    sh "$tmp_file" $sh_opts > "$idx_file"
     status="$?"
 
     if [ "$status" -eq 0 ]; then

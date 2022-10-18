@@ -14,6 +14,7 @@ skel \- create some files based on a skeleton template
 .OP --include path:path...
 .OP --force
 .OP --pascal
+.OP --windows
 .I skeleton \&.\|.\|.\&
 .YS
 .SH DESCRIPTION
@@ -111,6 +112,9 @@ to
 .TP
 .BR \-f ,\  \-\-force
 Force overwriting of existing files when expanding the skeleton template.
+.TP
+.BR \-w ,\  \-\-windows
+Text files are output with Windows format (i.e. <cr><lf>) line endings.
 .PD
 .SS "Logging Options"
 The

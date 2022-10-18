@@ -148,15 +148,17 @@ archive_prologue()
     echo "#"
     cat <<- 'EOF'
 	force=
+	eol=
 	tmpfile="shar-$$.tmp"
 	trap "rm -f $tmpfile*" 0
 
-	while getopts "f?" option
+	while getopts "fw?" option
 	do
 	    case "$option" in
 	    f)	force=1;;
+	    w)	eol='s/$/\r/';;
 	    \?)
-	        echo "Usage: <file>.sh [-f] [files...]"  >&2
+	        echo "Usage: <file>.sh [-f] [-w] [files...]"  >&2
 		exit 2;;
 	    esac
 	done
@@ -266,7 +268,7 @@ archive_file()
 	elif is_missing_nl "$file"  ; then
 	    notice 'r %s\tmissing-newline' "$file"
 	    echo 'file_type="missing newline"'
-	    echo "sed -e 's/^X//' > \"\$tmpfile.nl\" << '$eof_mark'"
+	    echo "sed -e \"s/^X//;\$eol\" > \"\$tmpfile.nl\" << '$eof_mark'"
 	    sed -e "s/^/X/" "$file"
 	    echo ""		# add compensating newline
 	    echo "$eof_mark"	# ...so eof mark is on a new line.
@@ -278,7 +280,7 @@ archive_file()
 	else
 	    notice 'r %s\ttext' "$file"
 	    echo 'file_type="text"'
-	    echo "sed -e 's/^X//' > \$tmpfile << '$eof_mark'"
+	    echo "sed -e \"s/^X//;\$eol\" > \$tmpfile << '$eof_mark'"
 	    sed -e "s/^/X/" "$file"
 	    echo "$eof_mark"
 	fi
