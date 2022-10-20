@@ -1,89 +1,110 @@
-# The Skel Templates Library
+# Skel: Create Files from Skeleton Templates
 
-This repository contains a collection of templates that can be used as
-a starting point for common software, document, project artefacts.
+Software is rarely written in a vacuum, created from nothing but
+imagination.  Despite the best intentions of the language designer and
+the developer, there will always be some "boiler plate" code; code
+that includes common definitions, or performs common tasks.
 
-It comprises:
+**Skel** is designed to make it easy to manage and use boilerplate code.
+It is structured as a library of template files, and a shell script
+to unpack a skeleton template while making some systematic substitutions.
 
-* *bones* --some samples of files that are common to several skeletons
-* *skeletons* --some templates of either a complete project, or
-  fragments thereof.
+The names and the contents of the files in the skeleton are modified
+such that the text "skeleton" is substituted with a specified name.
 
-The templates are built into self-extracting **sh** archives.  These
-can be extracted using the **skel** utility.
+e.g., if the core name is foo_bar:
 
-## Installation
+* `skeleton` is changed to `foo_bar`
+* `Skeleton` is changed to `FooBar`
+* `SKELETON` is changed to `FOO_BAR`.
 
-To build and install these templates, run the following commands.
+**Skel** is written as a POSIX shell script, so it should run fine
+in any sufficiently POSIX environment (e.g. Linux, Darwin, Cygwin,
+etc.).
 
-```bash
-$ make build
-$ make install
-```
+Binary files are opportunistically opened as **zip** files, and (if
+successful) the contents undergo substitution.  This works well for Microsoft
+Office files.
 
-## Usage
-
-To list currently available templates:
-
-```bash
-$ skel --list
-
-c-module
-c-project
-python-project
-sh-project
-```
-
-To actually apply/use a template use **skel**, e.g.
-
-```bash
-$ skel --verbose --name new_name c-project
-
-skel info: skel version v0.2.0
-skel info: loading skeleton "/usr/local/share/skel/c-project.sha"
-skel info: new_name/doxygen_config text
-skel info: new_name/new_name.c text
-skel info: new_name/LICENSE text
-skel info: new_name/test/test-new_name.c text
-skel info: new_name/test/Makefile text
-skel info: new_name/test/test-exec.sh text
-skel info: new_name/libnew_name/new_name.c text
-skel info: new_name/libnew_name/Makefile text
-skel info: new_name/libnew_name/new_name.h text
-skel info: new_name/Makefile text
-skel info: new_name/README.md text
-skel info: new_name/new_name.1 text
-skel info: new_name/new_name.conf text
-skel info: new_name/Doxyfile text
-```
+**Skel** is inspired by *Unix's* skeleton home directory facility, and
+of course the purpose-built facilities used by some common complex
+frameworks (e.g. *Rails*, *Django*, *Android* etc.). However, it
+aims to be more general in its application.
 
 ## Requirements
 
-[makeshift](https://github.com/tim-rose/makeshift)
-: a make-based build system
+* [makeshift](https://github.com/tim-rose/makeshift) --a make-based build system
+* [midden](https://github.com/tim-rose/midden) --a library of shell code
 
-[skel](https://github.com/tim-rose/skel)
-: a simple template expander that does keyword substitution.
-
-# Make Your Own Templates
-
-It's easy to make your own template:
-
-* Create a set of files or directoies using the word "skeleton" for a
-  name that will be substited later, when the skeleton is expanded.
-  (Both in the name of the directory or file, or in the file contents).
-
-* Package the collection into a self-extracting **sh**(1) archive
-  using the **skel-shar** command:
+## Installation
 
 ```bash
-$ skel-shar some-files... >/usr/local/share/skel/my-template.sha
+$ make install
 ```
 
-Note that **skel**(1) looks for templates in */usr/local/share/skel/*
-by default, but you can create and nominate other directories as you
-wish.  See **skel**'s manual page for details.
+## Getting Started
 
-Of course if you're adding a template to *this* repository, just add
-your new files to a new directory in *skeletons/", and the build
-system will take care of the rest.
+To create a file based on a skeleton, type `skel -n <name> <skeleton>`:
+
+```bash
+$ skel -v -n my_thing c-project.sha
+skel info: skel version local.latest
+skel info: loading skeleton "/usr/local/share/skel/c-project.sha"
+skel info: my_thing/my_thing.c text
+skel info: my_thing/LICENSE text
+skel info: my_thing/test/test-my_thing.c text
+skel info: my_thing/test/Makefile text
+skel info: my_thing/libmy_thing/my_thing.c text
+skel info: my_thing/libmy_thing/Makefile text
+skel info: my_thing/libmy_thing/my_thing.h text
+skel info: my_thing/Makefile text
+skel info: my_thing/README.md text
+skel info: my_thing/my_thing.1 text
+skel info: my_thing/my_thing.conf text
+
+$ ls -l my_thing
+total 28
+-rw-rw-r-- 1 timmo admin 1053 Mar 13 18:07 LICENSE
+-rw-rw-r-- 1 timmo admin  273 Mar 13 18:07 Makefile
+-rw-rw-r-- 1 timmo admin  837 Mar 13 18:07 README.md
+drwxrwxr-x 5 timmo admin  160 Mar 13 18:07 libmy_thing
+-rw-rw-r-- 1 timmo admin 2954 Mar 13 18:07 my_thing.1
+-rw-rw-r-- 1 timmo admin 4216 Mar 13 18:07 my_thing.c
+-rw-rw-r-- 1 timmo admin  230 Mar 13 18:07 my_thing.conf
+drwxrwxr-x 4 timmo admin  128 Mar 13 18:07 test
+```
+
+There are two parts to **skel**:
+
+ * the command
+ * a library of skeleton files.
+
+Although **skel** installs a set of skeletons, it is very likely that
+you'll want to create your own skeletons to suit the files and file
+types that you're working with.
+
+To see the list of skeletons installed, type `skel -l`; it will list
+all the skeleton files it can find:
+
+```bash
+$ skel -l
+
+/usr/local/lib/skel:
+c-project.sha  python-project.sha
+```
+
+By default, **skel** searches for skeletons files in
+*/usr/local/lib/skel*, but you can specify an alternative list of
+(colon-separated) paths in the environment variable `SKELPATH`, or via
+the command option `--include`.
+
+## Usage
+
+## Licence
+copyright &copy; Tim Rose 2020.
+This code is licensed under the MIT licence.
+
+## TODO
+
+* `bash` autocompletion (done!)
+* lots more skeletons!
