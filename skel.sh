@@ -15,9 +15,6 @@
 # expansion before the archive is unpacked.  This allows both the name
 # and the content to manipulated in a uniform way.
 #
-# TODO: implement bash expansion support?
-# TODO: customised replacements via additional sed/conf file.
-#
 . "midden"
 require "log"
 require "getopt"
@@ -59,7 +56,11 @@ main()
     else
 	log_quit "no name specified"
     fi
+    if [ "$script" -a ! -f "$script" ]; then
+	log_quit 'cannot open file "%s"' "$script"
+    fi
 
+    script=$(abs_path "$script")
     # REVISIT: read templates from stdin if no-args?
     for file; do
 	local skel_path=$(resolve_path "$include" "$file.sha")
@@ -78,16 +79,16 @@ main()
 }
 
 #
-# usage() --Echo this script's help message.
+# usage() --Echo this program's help message.
 #
 usage()
 {
     printf 'skel version %s\n' "$version"
     getopt_usage "skel [options] -n name skeleton..." "$1"
-    cat <<EOF
-e.g.
-skel -n my_new_project c-project"
-EOF
+    cat <<-EOF
+	e.g.
+	skel -n my_new_project c-project"
+	EOF
 }
 
 #
@@ -168,7 +169,7 @@ skel_binary()
 	    cd "$zip_dir"
 	    if quietly unzip -q "../$file"; then
 		info 'processing zip file %s' "$file"
-		sed -i -e "$transform" ${script:+-f $script} $(find * -type f)
+		log_cmd sed -i -e "$transform" ${script:+-f $script} $(find * -type f)
 		zip -q "../$file" $(find * -type f)
 	    fi
 	)
