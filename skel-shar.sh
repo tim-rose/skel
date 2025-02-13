@@ -58,14 +58,14 @@ if ! type readlink >/dev/null 2>&1; then
     debug 'emulating readlink(1)'
     readlink()
     {
-	local file="$1"
+        local file="$1"
 
-	if [ -h "$1" ]; then
-	    ls -l "$1" | sed -e 's/.* -> //'
-	    true
-	else
-	    false
-	fi
+        if [ -h "$1" ]; then
+            ls -l "$1" | sed -e 's/.* -> //'
+            true
+        else
+            false
+        fi
     }
 fi
 
@@ -82,14 +82,14 @@ argv_or_stdin()
     local arg
 
     if [ "$#" != "0" ]; then
-	for arg; do
-	    echo "$arg";
-	done
+        for arg; do
+            echo "$arg";
+        done
     else
-	while read arg; do
-	    debug 'read arg: "%s"' "$arg"
-	    echo "$arg"
-	done
+        while read arg; do
+            debug 'read arg: "%s"' "$arg"
+            echo "$arg"
+        done
     fi
 }
 
@@ -110,10 +110,10 @@ is_binary()
 
     n=$(tr -d '\000\033\a\b\t\r\n\f\v !-~' <"$file" | wc -c)
     if [ "$n" -ne 0 ]; then
-	debug '%s: contains %d unprintable characters' "$file" "$n"
-	true
+        debug '%s: contains %d unprintable characters' "$file" "$n"
+        true
     else
-	false
+        false
     fi
 }
 
@@ -143,7 +143,7 @@ archive_prologue()
 	# Contents:
 	EOF
     for file; do
-	echo "# $file"
+        echo "# $file"
     done
     echo "#"
     cat <<- 'EOF'
@@ -201,13 +201,13 @@ archive_dir()
     local dir="$1"
 
     if [ "$mkdir_ok" ] ; then
-	notice "r %s\tdirectory" "$dir"
-	cat <<- EOF
+        notice "r %s\tdirectory" "$dir"
+        cat <<- EOF
 	note="directory"
 	if [ ! -d $dir ]; then mkdir \"$dir\"; fi
 	EOF
     else				# emit code to make a directory
-	notice "%s:\tdirectory	(not archived)" "$dir"
+        notice "%s:\tdirectory	(not archived)" "$dir"
     fi
 }
 
@@ -252,42 +252,42 @@ archive_file()
     local eof_mark="[EOF@$file]"
 
     if [ "$dir" != '.' ]; then
-	cat <<- EOF
+        cat <<- EOF
 	if [ ! -d "$dir" ]; then mkdir -p "$dir"; fi
 	EOF
     fi
 
     if [ -s "$file" ]; then
-	if is_binary "$file"; then
-	    notice 'r %s\tbinary' "$file"
-	    echo 'file_type="binary"'
-	    echo "cat > \"\$tmpfile.uu\" << '$eof_mark'"
-	    uuencode $uu_opts "$file" < "$file"
-	    echo "$eof_mark"
-	    echo 'uudecode -o "$tmpfile" "$tmpfile.uu" && rm "$tmpfile.uu"'
-	elif is_missing_nl "$file"  ; then
-	    notice 'r %s\tmissing-newline' "$file"
-	    echo 'file_type="missing newline"'
-	    echo "sed -e \"s/^X//;\$eol\" > \"\$tmpfile.nl\" << '$eof_mark'"
-	    sed -e "s/^/X/" "$file"
-	    echo ""		# add compensating newline
-	    echo "$eof_mark"	# ...so eof mark is on a new line.
-	    cat <<- EOF		# emit code to remove compensating newline
+        if is_binary "$file"; then
+            notice 'r %s\tbinary' "$file"
+            echo 'file_type="binary"'
+            echo "cat > \"\$tmpfile.uu\" << '$eof_mark'"
+            uuencode $uu_opts "$file" < "$file"
+            echo "$eof_mark"
+            echo 'uudecode -o "$tmpfile" "$tmpfile.uu" && rm "$tmpfile.uu"'
+        elif is_missing_nl "$file"  ; then
+            notice 'r %s\tmissing-newline' "$file"
+            echo 'file_type="missing newline"'
+            echo "sed -e \"s/^X//;\$eol\" > \"\$tmpfile.nl\" << '$eof_mark'"
+            sed -e "s/^/X/" "$file"
+            echo ""		# add compensating newline
+            echo "$eof_mark"	# ...so eof mark is on a new line.
+            cat <<- EOF		# emit code to remove compensating newline
 		file_size=\$(wc -c < "\$tmpfile.nl")
 		dd ibs=1 count=\$((file_size-1)) < "\$tmpfile.nl" > "\$tmpfile" 2>/dev/null
 		rm "\$tmpfile.nl"
 		EOF
-	else
-	    notice 'r %s\ttext' "$file"
-	    echo 'file_type="text"'
-	    echo "sed -e \"s/^X//;\$eol\" > \$tmpfile << '$eof_mark'"
-	    sed -e "s/^/X/" "$file"
-	    echo "$eof_mark"
-	fi
+        else
+            notice 'r %s\ttext' "$file"
+            echo 'file_type="text"'
+            echo "sed -e \"s/^X//;\$eol\" > \$tmpfile << '$eof_mark'"
+            sed -e "s/^/X/" "$file"
+            echo "$eof_mark"
+        fi
     else
-	notice 'r %s\tempty' "$file"
-	echo 'file_type="empty"'
-	echo "touch \"\$tmpfile\""
+        notice 'r %s\tempty' "$file"
+        echo 'file_type="empty"'
+        echo "touch \"\$tmpfile\""
     fi
 }
 
@@ -301,24 +301,24 @@ main()
 
     archive_prologue "$@"
     argv_or_stdin "$@" |
-	{
-	    while read file; do
-		status=0
-		if [ -d "$file" ] ; then
-		    archive_dir "$file" || status=1
-		elif [ -h "$file" -a "$follow_symlink" ]; then
-		    archive_symlink "$file" || status=1
-		elif [ -f "$file" ]; then	# note: matches symlinks too
-		    archive_file "$file" || status=1
-		elif [ ! -e "$file" ]; then
-		    notice 'r %s\tno such file (not archived)' "$file"
-		    status=1
-		else
-		    notice 'r %s\tunsupported file type (not archived)' "$file"
-		    status=1
-		fi
-		if [ "$status" -eq 0 ]; then
-		    cat <<- EOF
+        {
+            while read file; do
+        	status=0
+        	if [ -d "$file" ] ; then
+        	    archive_dir "$file" || status=1
+        	elif [ -h "$file" -a "$follow_symlink" ]; then
+        	    archive_symlink "$file" || status=1
+        	elif [ -f "$file" ]; then	# note: matches symlinks too
+        	    archive_file "$file" || status=1
+        	elif [ ! -e "$file" ]; then
+        	    notice 'r %s\tno such file (not archived)' "$file"
+        	    status=1
+        	else
+        	    notice 'r %s\tunsupported file type (not archived)' "$file"
+        	    status=1
+        	fi
+        	if [ "$status" -eq 0 ]; then
+        	    cat <<- EOF
 			if is_selected "$file" "\$@"; then
 			    if [ ! -e "$file" -o "\$force" ]; then
 			        mv "\$tmpfile" "$file"
@@ -328,10 +328,10 @@ main()
 			    printf 'x %s\t%s\n' '$file' "\$file_type"
 			fi
 			EOF
-		fi
-	    done
-	    exit "$status"
-	}
+        	fi
+            done
+            exit "$status"
+        }
     status=$?			# collect exit status from while loop
     #archive_epilogue
     return "$status"
@@ -348,9 +348,9 @@ do
     q)	quiet=1 verbose= debug=;;
     _)	quiet= verbose=1 debug=1;;
     \?)
-	printf 'skel-shar version %s\n' "$version" >&2
-	echo $usage >&2
-	exit 2;;
+        printf 'skel-shar version %s\n' "$version" >&2
+        echo $usage >&2
+        exit 2;;
     esac
 done
 shift $(($OPTIND - 1))
