@@ -90,13 +90,25 @@ Modify the generated file names and contents based on
 .TP
 .BI \-s\  script
 .TQ
-.BI \-\-script\fR= sed-script
+.BI \-\-script\fR= filter-script
 Further modify the generated content by a
-.BR sed (1)
-script, that reads text from
+script, a simple filter that reads text from
 .I stdin
 and prints the filtered/modified output to
 .IR stdout .
+If the environment variable SKEL_FILTER is defined, its value will be used to
+name the script.  The script must be named as either an absolute path name, or
+name an executable command in PATH.
+
+For example, the script can be used to customise generic copyright
+information, using sed:
+
+.EX
+#!/usr/bin/env -S sed -f
+s/COPYRIGHT/Copyright (c) YEAR AUTHOR/g
+s/YEAR/2038/g
+s/AUTHOR/Bozo the Clown/g
+.EE
 .TP
 .BI \-I\  path-spec
 .TQ
@@ -155,6 +167,9 @@ is used.
 .TP
 MIDDENPATH
 The search path for additional shell library functions.
+.TP
+SKEL_FILTER
+The name of a filter script to make further changes to the skeleton
 .PD
 .SH "EXIT STATUS"
 .B Skel

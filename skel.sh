@@ -22,8 +22,9 @@ require "wordy"
 
 version=
 include=${SKELPATH:-/usr/local/share/skel}
+script=${SKEL_FILTER:-cat}
 name=
-opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=;v.version;w.windows;?.help"
+opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=$script;v.version;w.windows;?.help"
 opts="$opts;$LOG_GETOPTS"
 sh_opts=
 
@@ -59,11 +60,10 @@ main()
     else
 	log_quit "no name specified"
     fi
-    if [ "$script" -a ! -f "$script" ]; then
-	log_quit 'cannot open file "%s"' "$script"
+    if ! filter=$(which "$script"); then
+	log_quit 'cannot execute file "%s"' "$script"
     fi
 
-    script=$(abs_path "$script")
     # REVISIT: read templates from stdin if no-args?
     for file; do
 	local skel_path=$(resolve_path "$include" "$file.sha")
@@ -134,7 +134,7 @@ fill_skeleton()
     debug 'name: "%s", "%s", "%s"' "$name" "$camel_name" "$upper_name"
     debug 'plural.name: "%s", "%s", "%s"' "$plural_name" "$plural_camel_name" "$plural_upper_name"
 
-    sed -e "$transform" ${script:+-f $script} <"$skel_file" >"$tmp_file"
+    sed -e "$transform" <"$skel_file" | "$filter" >"$tmp_file"
 
     sh_opts="${force:+-f} ${windows:+-w}"
     sh "$tmp_file" $sh_opts > "$idx_file"

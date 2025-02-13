@@ -1,7 +1,6 @@
 # Things still to do...
 
  * Build as a MSI package?
- * Add programmable completion for skeletons
  * Consider adding explicit case-handling, e.g.
    * skeleton:u --uppercase (e.g. FOO_BAR)
    * skeleton:c --camel case (e.g. fooBar)
