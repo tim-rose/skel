@@ -25,7 +25,7 @@ __skel_complete()
     skel_options="$skel_options -q --quiet -v --verbose -_ --debug"
 
     case $prev_arg in		# complete options with arg.s
-	(-i | --include)
+	(-I | --include)
 	    COMPREPLY=( $(compgen -d -- $arg) )
 	    return 0
 	    ;;
