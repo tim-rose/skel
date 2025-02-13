@@ -2,8 +2,11 @@
 #
 # skel-complete.sh --Programmable completion for the skel command.
 #
+# Contents:
+# __skel_complete() --Bash(1) completion function for skel(1).
+#
 
-# _skel_complete() --Bash(1) completion function for skel(1).
+# __skel_complete() --Bash(1) completion function for skel(1).
 #
 # Remarks:
 # COMPREPLY array holds the completion results that gets displayed
@@ -22,15 +25,15 @@ __skel_complete()
     skel_options="$skel_options -q --quiet -v --verbose -_ --debug"
 
     case $prev_arg in		# complete options with arg.s
-	-i | --include)
+	(-i | --include)
 	    COMPREPLY=( $(compgen -d -- $arg) )
 	    return 0
 	    ;;
-	-n | --name)
+	(-n | --name)
 	    COMPREPLY=( $(compgen -W name -- $arg) )
 	    return 0
 	    ;;
-	-s | --script)
+	(-s | --script)
 	    COMPREPLY=( $(compgen -f -- $arg) )
 	    return 0
 	    ;;
@@ -45,7 +48,7 @@ __skel_complete()
     #
     # complete misc. arg.s by delegating to "skel --list".
     #
-    COMPREPLY=( $(compgen -W "$(${COMP_WORDS[*]} --list)" -- $arg) )
+    COMPREPLY=( $(compgen -W "$(${COMP_WORDS[*]} --list 2>/dev/null)" -- $arg) )
 }
 
 complete -F __skel_complete skel
