@@ -23,7 +23,7 @@ require "wordy"
 version=
 include=${SKELPATH:-/usr/local/share/skel}
 name=
-opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=;w.windows;?.help"
+opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=;v.version;w.windows;?.help"
 opts="$opts;$LOG_GETOPTS"
 sh_opts=
 
@@ -37,12 +37,15 @@ main()
 	exit 2
     fi
     if [ "$help" ]; then
-	usage "$opts" >&2
+	usage "$opts"
 	exit 0
     fi
-    log_getopts
-    info 'skel version %s' "$version"
+    if [ "$version" ]; then
+        printf 'skel version %s\n' "VERSION"
+        exit 0
+    fi
 
+    log_getopts
     if [ "$list" ]; then
 	list_skeletons
 	exit 0
