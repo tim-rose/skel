@@ -30,6 +30,7 @@
 # Bourne shell script.
 #
 # @todo: preserve file permissions (use sed to construct arithmetic)
+# @fixme: unpacking a directory error message
 #
 version=
 options=dhmvq_
@@ -203,8 +204,8 @@ archive_dir()
     if [ "$mkdir_ok" ] ; then
         notice "r %s\tdirectory" "$dir"
         cat <<- EOF
-	note="directory"
-	if [ ! -d $dir ]; then mkdir \"$dir\"; fi
+	file_type="directory"
+	if [ ! -d "$dir" ]; then mkdir "$dir"; fi
 	EOF
     else				# emit code to make a directory
         notice "%s:\tdirectory	(not archived)" "$dir"
@@ -248,14 +249,7 @@ archive_symlink()
 archive_file()
 {
     local file="$1"
-    local dir=$(dirname "$file")
     local eof_mark="[EOF@$file]"
-
-    if [ "$dir" != '.' ]; then
-        cat <<- EOF
-	if [ ! -d "$dir" ]; then mkdir -p "$dir"; fi
-	EOF
-    fi
 
     if [ -s "$file" ]; then
         if is_binary "$file"; then
@@ -321,6 +315,7 @@ main()
         	    cat <<- EOF
 			if is_selected "$file" "\$@"; then
 			    if [ ! -e "$file" -o "\$force" ]; then
+                                mkdir -p $(dirname "$file")
 			        mv "\$tmpfile" "$file"
 			    else
 			        file_type="file exists, not overwritten"
