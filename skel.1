@@ -21,7 +21,7 @@ skel \- create some folders and files based on a skeleton template
 The
 .B skel
 command creates one or more files from a skeleton template file.
-The skeleeton is a self-extracting shell archive, which is transformed
+The skeleton is a self-extracting shell archive, which is transformed
 as it is expanded to replace the word "skeleton" with the specified
 .IR name .
 The replacement is case sensitive in the following way; if the
@@ -194,6 +194,7 @@ The template name transformation is done via a blind
 .BR sed ;
 there is a possiblility that binary files will be corrupted.
 .SH SEE ALSO
+.BR skel-shar (1),
 .BR shar (1),
 .BR sed (1),
 .BR zip (1),
