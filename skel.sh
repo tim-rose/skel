@@ -24,7 +24,7 @@ version=
 include=${SKELPATH:-/usr/local/share/skel}
 script=${SKEL_FILTER:-cat}
 name=
-opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=$script;v.version;w.windows;?.help"
+opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=$script;V.version;w.windows;?.help"
 opts="$opts;$LOG_GETOPTS"
 sh_opts=
 
@@ -102,6 +102,7 @@ list_skeletons()
     local IFS=:
 
     for dir in $include; do
+        debug 'list %s' "$dir"
         if [ -d "$dir" ]; then
 	    find "$dir" -name "*.sha" | sed -e "s|$dir/||;s/[.]sha//g"
 	fi
