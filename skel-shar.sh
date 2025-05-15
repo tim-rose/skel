@@ -165,16 +165,8 @@ archive_prologue()
 	done
 	shift $(($OPTIND - 1))
 
-	match()
-	{
-	    local string="$1"
-	    local pattern="$2"
+	match() { case "$1" in ($2) return 0;; esac; return 1; }
 
-	    case "$string" in
-	    $pattern) return 0;;
-	    esac
-	    return 1
-	}
 	is_selected()
 	{
 	    local target="$1"; shift
@@ -299,9 +291,9 @@ main()
             while read file; do
         	status=0
         	if [ -d "$file" ] ; then
-        	    archive_dir "$file" || status=1
+                    archive_dir "$file"
         	elif [ -h "$file" -a "$follow_symlink" ]; then
-        	    archive_symlink "$file" || status=1
+                    archive_symlink "$file"
         	elif [ -f "$file" ]; then	# note: matches symlinks too
         	    archive_file "$file" || status=1
         	elif [ ! -e "$file" ]; then
@@ -315,7 +307,7 @@ main()
         	    cat <<- EOF
 			if is_selected "$file" "\$@"; then
 			    if [ ! -e "$file" -o "\$force" ]; then
-                                mkdir -p $(dirname "$file")
+			        mkdir -p $(dirname "$file")
 			        mv "\$tmpfile" "$file"
 			    else
 			        file_type="file exists, not overwritten"
