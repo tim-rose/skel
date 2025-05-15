@@ -2,9 +2,12 @@
 # Makefile --Build rules to install bash completion.
 #
 language = sh
-subdir = bash_completion.d
+subdir = bash-completion/completions
 SHL_SRC = skel-complete.shl
 
 include makeshift.mk
 
-install: $(SHL_SRC:%=$(sysconfdir)/%)
+install: $(datadir)/skel
+
+$(datadir)/skel: $(SHL_SRC)
+	$(INSTALL_DATA) $? $@
