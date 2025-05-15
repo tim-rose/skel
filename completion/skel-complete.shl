@@ -23,6 +23,7 @@ __skel_complete()
     local command="$1" arg="$2" prev_arg="$3"
     local skel_options="-f --force -i --include -n --name -s --script"
     skel_options="$skel_options -q --quiet -v --verbose -_ --debug"
+    skel_options="$skel_options --version"
 
     case $prev_arg in		# complete options with arg.s
 	(-I | --include)
