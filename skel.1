@@ -13,7 +13,7 @@ skel \- create some folders and files based on a skeleton template
 .OP --script filter
 .OP --include path:path...
 .OP --force
-.OP --pascal
+.OP --camel
 .OP --windows
 .I skeleton \&.\|.\|.\&
 .YS
@@ -46,7 +46,7 @@ whole, so it applies equally to the files' names and to their
 contents.
 .PP
 The
-.I --pascal
+.I --camel
 option controls whether
 .I name
 is translated as
@@ -105,9 +105,9 @@ information, using sed:
 
 .EX
 #!/usr/bin/env -S sed -f
-s/COPYRIGHT/Copyright (c) YEAR AUTHOR/g
-s/YEAR/2038/g
-s/AUTHOR/Bozo the Clown/g
+s/\\<COPYRIGHT\\>/Copyright (c) YEAR AUTHOR/g
+s/\\<YEAR\\>/2038/g
+s/\\<AUTHOR\\>/Bozo the Clown/g
 .EE
 .TP
 .BI \-I\  path-spec
@@ -169,7 +169,7 @@ MIDDENPATH
 The search path for additional shell library functions.
 .TP
 SKEL_FILTER
-The name of a filter script to make further changes to the skeleton
+The name of a filter script to make further changes to the skeleton.
 .PD
 .SH "EXIT STATUS"
 .B Skel

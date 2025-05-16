@@ -24,7 +24,7 @@ version=
 include=${SKELPATH:-/usr/local/share/skel}
 script=${SKEL_FILTER:-cat}
 name=
-opts="f.force;I.include=$include;l.list;n.name=$name;p.pascal;s.script=$script;V.version;w.windows;?.help"
+opts="f.force;I.include=$include;l.list;n.name=$name;c.camel;s.script=$script;V.version;w.windows;?.help"
 opts="$opts;$LOG_GETOPTS"
 sh_opts=
 
@@ -119,21 +119,21 @@ fill_skeleton()
 {
     local status=
     local skel_file=$1 tmp_file=skel-$$.sh idx_file="skel-idx-$$.txt"
-    local camel_name="$(camel_case $name)"
+    local pascal_name="$(pascal_case $name)"
     local upper_name="$(echo $name | tr a-z A-Z)"
     local plural_name=$(plural $name)
-    local plural_camel_name="$(camel_case $plural_name)"
+    local plural_pascal_name="$(pascal_case $plural_name)"
     local plural_upper_name="$(echo $plural_name | tr a-z A-Z)"
 
-    if [ "$pascal" ]; then
-	name="$(pascal_case $name)"
+    if [ "$camel" ]; then
+	name="$(camel_case $name)"
     fi
-    local transform="s/skeletons/$plural_name/g;s/Skeletons/$plural_camel_name/g;s/SKELETONS/$plural_upper_name/g"
-    local transform="$transform;s/skeleton/$name/g;s/Skeleton/$camel_name/g;s/SKELETON/$upper_name/g"
+    local transform="s/skeletons/$plural_name/g;s/Skeletons/$plural_pascal_name/g;s/SKELETONS/$plural_upper_name/g"
+    local transform="$transform;s/skeleton/$name/g;s/Skeleton/$pascal_name/g;s/SKELETON/$upper_name/g"
 
     info 'loading skeleton "%s"' "$skel_file"
-    debug 'name: "%s", "%s", "%s"' "$name" "$camel_name" "$upper_name"
-    debug 'plural.name: "%s", "%s", "%s"' "$plural_name" "$plural_camel_name" "$plural_upper_name"
+    debug 'name: "%s", "%s", "%s"' "$name" "$pascal_name" "$upper_name"
+    debug 'plural.name: "%s", "%s", "%s"' "$plural_name" "$plural_pascal_name" "$plural_upper_name"
 
     sed -e "$transform" <"$skel_file" | "$filter" >"$tmp_file"
 
