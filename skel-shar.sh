@@ -335,7 +335,7 @@ do
     q)	quiet=1 verbose= debug=;;
     _)	quiet= verbose=1 debug=1;;
     \?)
-        printf 'skel-shar version %s\n' "$version" >&2
+        printf 'skel-shar version %s\n' "VERSION" >&2
         echo $usage >&2
         exit 2;;
     esac
