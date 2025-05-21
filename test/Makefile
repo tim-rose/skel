@@ -8,3 +8,6 @@ language = sh
 include makeshift.mk test/tap.mk
 
 test-tap: $(SH_TRG)
+
+distclean clean: clean-local
+clean-local:; $(RM) -r unpack-data
