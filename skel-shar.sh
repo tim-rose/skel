@@ -99,11 +99,14 @@ argv_or_stdin()
 # is_binary() --Test if a file's content is "binary".
 #
 # Remarks:
-# This is a simple test: does the file contain any non-printable ASCII.
+# This is a simple test: does the file contain any non-printable ASCII?
+#
 # The non-printable characters allowed are:
-# * \0	--utf16 bytes
-# * \033 --colour formatting in log files etc.
+# * \0	   --utf16 MSB bytes (?)
+# * \033   --colour formatting in log files etc.
 # * \t\n.. --all the usual printf escapes
+#
+# Note that this does not handle UTF-8.
 #
 is_binary()
 {
@@ -165,22 +168,35 @@ archive_prologue()
 	done
 	shift $(($OPTIND - 1))
 
-	match() { case "$1" in ($2) return 0;; esac; return 1; }
+	match() { case "$1" in ($2) true;; (*) false;; esac; }
 
 	is_selected()
 	{
 	    local target="$1"; shift
 
-	    if [ $# -eq 0 ]; then
-	        return 0		# always selected
+	    if [ $# -ne 0 ]; then
+	        for candidate; do
+	            match "$target" "$candidate" && return 0
+	        done
+	        false
+	    else
+	        true
 	    fi
+	}
 
-	    for candidate; do
-	        if match "$target" "$candidate"; then
-	            return 0		# match
+	select_extract()
+	{
+	    local target="$1"; shift
+
+	    if is_selected "$target" "$@"; then
+	        if [ ! -e "$target" -o "$force" ]; then
+	            mkdir -p $(dirname "$target")
+	            mv "$tmpfile" "$target"
+	        else
+	            file_type="file exists, not overwritten"
 	        fi
-	    done
-	    return 1			# no matches
+	        printf 'x %s\t%s\n' "$target" "$file_type"
+	    fi
 	}
 	EOF
 }
@@ -201,6 +217,7 @@ archive_dir()
 	EOF
     else				# emit code to make a directory
         notice "%s:\tdirectory	(not archived)" "$dir"
+        false
     fi
 }
 
@@ -292,6 +309,7 @@ main()
         	status=0
         	if [ -d "$file" ] ; then
                     archive_dir "$file"
+                    status=$?
         	elif [ -h "$file" -a "$follow_symlink" ]; then
                     archive_symlink "$file"
         	elif [ -f "$file" ]; then	# note: matches symlinks too
@@ -305,22 +323,13 @@ main()
         	fi
         	if [ "$status" -eq 0 ]; then
         	    cat <<- EOF
-			if is_selected "$file" "\$@"; then
-			    if [ ! -e "$file" -o "\$force" ]; then
-			        mkdir -p $(dirname "$file")
-			        mv "\$tmpfile" "$file"
-			    else
-			        file_type="file exists, not overwritten"
-			    fi
-			    printf 'x %s\t%s\n' '$file' "\$file_type"
-			fi
+			select_extract "$file" "\$@"
 			EOF
         	fi
             done
             exit "$status"
         }
     status=$?			# collect exit status from while loop
-    #archive_epilogue
     return "$status"
 }
 

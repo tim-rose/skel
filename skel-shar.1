@@ -33,7 +33,7 @@ Use this option to create an archive that recreates (an empty) directory.
 .B \-h
 Follow symlinks.  Normally
 .B skel-shar
-simply archives the file as symlink.
+simply archives the file as a symlink.
 If the
 .B -h
 option is specified, the linked-to files are archived.
@@ -48,8 +48,17 @@ encoding format.
 Quiet mode: avoid printing the files being archived.
 .SH "EXIT STATUS"
 .B skel-shar
-returns 2 if there was an error in the command line
-arguments, 1 if there was an error archiving a file.
+exits with the following status:
+.PD 0
+.TP 4
+0
+Successfully unarchived all requested files.
+.TP
+1
+Some error occurred when unarchiving one or more files in the archive.
+.TP
+2
+There was an error in the command line arguments (e.g. unrecognised option).
 
 .SH SEE ALSO
 .BR ar (1),
