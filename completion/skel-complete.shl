@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # skel-complete.sh --Programmable completion for the skel command.
 #
@@ -25,26 +25,25 @@ __skel_complete()
     skel_options="$skel_options -q --quiet -v --verbose -_ --debug"
     skel_options="$skel_options --version"
 
-    case $prev_arg in		# complete options with arg.s
+    case "$prev_arg" in		# complete options with arg.s
 	(-I | --include)
 	    COMPREPLY=( $(compgen -d -- $arg) )
-	    return 0
-	    ;;
+	    return 0;;
 	(-n | --name)
 	    COMPREPLY=( $(compgen -W name -- $arg) )
-	    return 0
-	    ;;
+	    return 0;;
 	(-s | --script)
 	    COMPREPLY=( $(compgen -f -- $arg) )
-	    return 0
-	    ;;
+	    return 0;;
+        (*) ;;
     esac
 
-    case $arg in		# complete skel's options
+    case "$arg" in		# complete skel's options
 	-*)
 	    COMPREPLY=( $(compgen -W "$skel_options" -- "$arg" ) )
 	    return 0
 	    ;;
+        (*) ;;
     esac
     #
     # complete misc. arg.s by delegating to "skel --list".
