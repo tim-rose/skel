@@ -6,7 +6,7 @@
 shar \- Create a self-extracting shell archive
 .SH SYNOPSIS
 .SY skel-shar
-.OP -d
+.\" .OP -d
 .OP -h
 .OP -m
 .OP -q
@@ -24,19 +24,14 @@ The archive is output to
 A list of the archived files is output to
 .IR stderr .
 .SH OPTIONS
-.TP
-.B \-d
-Create directories.
-The default behaviour is to ignore directories.
-Use this option to create an archive that recreates (an empty) directory.
+.\" .TP
+.\" .B \-d
+.\" Create directories.
+.\" The default behaviour is to ignore directories.
+.\" Use this option to create an archive that recreates (an empty) directory.
 .TP
 .B \-h
-Follow symlinks.  Normally
-.B skel-shar
-simply archives the file as a symlink.
-If the
-.B -h
-option is specified, the linked-to files are archived.
+Follow symlinks; archive and dump the files they point to.
 .TP
 .B \-m
 Archive binary files in Base64 format.  The default behaviour is to

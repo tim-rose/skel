@@ -7,13 +7,11 @@
 # is_binary()        --Test if a file's content is "binary".
 # is_missing_nl()    --Test if a file is missing a newline at end of file.
 # archive_prologue() --Emit shar prologue.
-# archive_dir()      --Emit archive code for a directory.
 # archive_symlink()  --Emit archive code for a symlink.
 # archive_file()     --Emit archive code for a plain file.
 # main()             --Archive a list of files into a shell self-extracting archive
 #
 # Options:
-# -d  --generate code to do a mkdir(1) if file is a directory.
 # -h  --follow symlinks
 # -m  --encode binary files with base64 encoding (default is uuencode's default)
 # -q  --avoid echo log messages (to stderr).
@@ -33,9 +31,8 @@
 # @fixme: unpacking a directory error message
 #
 version=
-options=dhmvq_
+options=hmvq_
 usage="Usage: shar -$options files... >archive"
-mkdir_ok=
 follow_symlink=1
 uu_opts=
 quiet=
@@ -203,26 +200,6 @@ archive_prologue()
 
 
 #
-# archive_dir() --Emit archive code for a directory.
-#
-archive_dir()
-{
-    local dir="$1"
-
-    if [ "$mkdir_ok" ] ; then
-        notice "r %s\tdirectory" "$dir"
-        cat <<- EOF
-	file_type="directory"
-	if [ ! -d "$dir" ]; then mkdir "$dir"; fi
-	EOF
-    else				# emit code to make a directory
-        notice "%s:\tdirectory	(not archived)" "$dir"
-        false
-    fi
-}
-
-
-#
 # archive_symlink() --Emit archive code for a symlink.
 #
 # Remarks:
@@ -232,12 +209,11 @@ archive_dir()
 archive_symlink()
 {
     local file="$1" target="$(readlink "$file")"
-    local dir=$(dirname "$file") base=$(basename "$file")
 
     notice "r %s\tsymlink" "$file"
     cat <<- EOF
 	file_type="symlink to $target"
-	(cd "$dir" && ln -sf "$target" "$base")
+	ln -sf "$target" "\$tmpfile"
 	EOF
 }
 
@@ -252,8 +228,6 @@ archive_symlink()
 # * a symlink
 # * an empty file
 # * a text file with a missing newline at end-of-file
-#
-# @revisit: Save to temp file, then move if check-sum/exists check OK.
 #
 archive_file()
 {
@@ -308,8 +282,8 @@ main()
             while read file; do
         	status=0
         	if [ -d "$file" ] ; then
-                    archive_dir "$file"
-                    status=$?
+                    notice "%s:\tdirectory	(not archived)" "$dir"
+                    status=1
         	elif [ -h "$file" -a "$follow_symlink" ]; then
                     archive_symlink "$file"
         	elif [ -f "$file" ]; then	# note: matches symlinks too
@@ -337,7 +311,6 @@ main()
 while getopts "$options" opt
 do
     case "$opt" in
-    d)	mkdir_ok=1;;
     h)	follow_symlink=;;
     m)  uu_opts='-m';;
     v)	quiet= verbose=1 debug=;;
